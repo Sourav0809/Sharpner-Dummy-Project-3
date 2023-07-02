@@ -46,7 +46,7 @@ const Login = (props) => {
   }
   // validating college name when it include more than 10 charcters
   const validateCollegeNameHandler = () => {
-    setCollegeNameValid(enteredCollegeName.trim().length === 10)
+    setCollegeNameValid(enteredCollegeName.trim().length >= 10)
   }
 
   const submitHandler = (event) => {
