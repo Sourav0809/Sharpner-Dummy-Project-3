@@ -11,18 +11,17 @@ const emailReducer = (state, action) => {
   if (action.type === "INPUT_BLUR") {
     return ({ value: state.value, isValid: state.value.includes('@') })
   }
-  return { value: '', isValid: false }
+  return state
 }
 
 const pwdReducer = (state, action) => {
-  console.log(state)
   if (action.type === 'USER_INPUT_PWD') {
     return ({ value: action.val, isValid: action.val.trim().length > 6 })
   }
   if (action.type === 'INPUT_BLUR') {
     return ({ value: state.value, isValid: state.value.trim().length > 6 })
   }
-  return { value: '', isValid: false }
+  return state
 }
 
 const Login = (props) => {
@@ -31,25 +30,8 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
 
-  const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: false })
-  const [pwdState, dispatchPwd] = useReducer(pwdReducer, { value: '', isValid: false })
-
-
-
-  // useEffect(() => {
-  //   const cleanUpTimeOut = setTimeout(() => {
-  //     console.log("checking")
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6 && enteredCollegeName.trim().length >= 10
-  //     );
-
-  //   }, 500);
-
-  //   return (() => {
-  //     clearTimeout(cleanUpTimeOut)
-  //   })
-
-  // }, [enteredEmail, enteredPassword, enteredCollegeName])
+  const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: null })
+  const [pwdState, dispatchPwd] = useReducer(pwdReducer, { value: '', isValid: null })
 
 
 
@@ -60,6 +42,7 @@ const Login = (props) => {
   };
 
   const passwordChangeHandler = (event) => {
+    console.log(emailState);
     dispatchPwd({
       type: 'USER_INPUT_PWD',
       val: event.target.value
