@@ -1,5 +1,4 @@
-import React, { useReducer, useState, useContext } from 'react';
-
+import React, { useReducer, useState, useContext, useRef } from 'react';
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
@@ -37,22 +36,29 @@ const collegeNameReducer = (state, action) => {
   }
   return state
 }
+
+
 const Login = (props) => {
   const ctx = useContext(AuthContext)
   const [formIsValid, setFormIsValid] = useState(false);
-
   const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: null })
   const [pwdState, dispatchPwd] = useReducer(pwdReducer, { value: '', isValid: null })
   const [collegeeNameState, dispatchCollegeName] = useReducer(collegeNameReducer, { value: '', isValid: null })
 
 
 
-
+  // for handeling the email input 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: 'USER_INPUT', val: event.target.value })
     setFormIsValid(event.target.value.includes('@') && pwdState.isValid)
   };
 
+  const validateEmailHandler = () => {
+    dispatchEmail({ type: 'INPUT_BLUR' })
+  };
+
+
+  // for handling the password input 
   const passwordChangeHandler = (event) => {
     console.log(emailState);
     dispatchPwd({
@@ -63,14 +69,15 @@ const Login = (props) => {
     setFormIsValid(event.target.value.trim().length > 6 && emailState.isValid)
   };
 
-  const validateEmailHandler = () => {
-    dispatchEmail({ type: 'INPUT_BLUR' })
-  };
 
   const validatePasswordHandler = () => {
     dispatchPwd({ type: 'INPUT_BLUR' })
   };
 
+
+
+
+  // for handeling the college name 
   const collegeNameChangeHandeler = (event) => {
     dispatchCollegeName(
       {
@@ -79,24 +86,37 @@ const Login = (props) => {
       }
     )
   }
-  // validating college name when it include more than 10 charcters
+
   const validateCollegeNameHandler = () => {
     dispatchCollegeName(
       { type: 'INPUT_BLUR' }
     )
   }
 
+  const emailInputRef = useRef()
+  const pwdInputRef = useRef()
+
 
   const submitHandler = (event) => {
     event.preventDefault();
-    ctx.onLogin(emailState.value, pwdState.value, collegeeNameState.value);
+    if (formIsValid) {
+      ctx.onLogin(emailState.value, pwdState.value, collegeeNameState.value);
+    }
+    else if (!emailState.isValid) {
+      emailInputRef.current.focus()
+    }
+    else {
+      pwdInputRef.current.focus()
+    }
   };
+
 
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
         <Input type={'email'}
+          ref={emailInputRef}
           id={'email'}
           label={'Email'}
           isValid={emailState.isValid}
@@ -113,6 +133,7 @@ const Login = (props) => {
           onBlur={validateCollegeNameHandler} />
 
         <Input type={'password'}
+          ref={pwdInputRef}
           id={'password'}
           label={"Password"}
           isValid={pwdState.isValid}
@@ -121,7 +142,7 @@ const Login = (props) => {
           onblur={validatePasswordHandler} />
 
         <div className={classes.actions}>
-          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+          <Button type="submit" className={classes.btn}>
             Login
           </Button>
         </div>
