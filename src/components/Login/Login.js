@@ -99,6 +99,7 @@ const Login = (props) => {
         <Input type={'email'}
           id={'email'}
           label={'Email'}
+          isValid={emailState.isValid}
           value={emailState.value}
           onChange={emailChangeHandler}
           onBlur={validateEmailHandler} />
@@ -106,6 +107,7 @@ const Login = (props) => {
         <Input type={'text'}
           id={'college_name'}
           label={'College Name'}
+          isValid={collegeeNameState.isValid}
           value={collegeeNameState.value}
           onChange={collegeNameChangeHandeler}
           onBlur={validateCollegeNameHandler} />
@@ -113,6 +115,7 @@ const Login = (props) => {
         <Input type={'password'}
           id={'password'}
           label={"Password"}
+          isValid={pwdState.isValid}
           value={pwdState.value}
           onChange={passwordChangeHandler}
           onblur={validatePasswordHandler} />
